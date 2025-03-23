@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # API (バックエンド)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    volumes:
+      - ./bff:/var/www/bff
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  # Frontend (Nuxt.js)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - ./client:/app/client
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
